@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_watermark/image_watermark.dart';
+import 'package:mobile_prog_test_2/app/modules/detail/models/save_image_model.dart';
 import 'package:mobile_prog_test_2/app/modules/home/models/imgflip_model.dart' as imgflip_model;
+import 'package:permission_handler/permission_handler.dart';
 
 class DetailController extends GetxController {
   late imgflip_model.Memes? dataMeme;
@@ -66,5 +70,29 @@ class DetailController extends GetxController {
     mainImageBytes = watermarkedImageBytes;
     isAddText = true;
     update();
+  }
+
+  saveWatermarkedImageToLocal() async {
+    const permission = Permission.storage;
+    final status = await permission.status;
+    if (status != PermissionStatus.granted) {
+      await permission.request();
+      if (await permission.status.isGranted == false) {
+        await permission.request();
+      }
+    }
+
+    if (status == PermissionStatus.granted) {
+      final result = await ImageGallerySaver.saveImage(watermarkedImageBytes);
+      var responseResult = jsonDecode(jsonEncode(result));
+      var readResponseResult = SaveImageModel.fromJson(responseResult);
+      if (readResponseResult.isSuccess == true) {
+        return "Gambar berhasil disimpan";
+      } else {
+        return "Gambar gagal disimpan";
+      }
+    } else {
+      return status;
+    }
   }
 }

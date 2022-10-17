@@ -130,7 +130,30 @@ class DetailView extends GetView<DetailController> {
                             children: [
                               Expanded(
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    var status = await controller.saveWatermarkedImageToLocal();
+                                    Get.snackbar(
+                                      "Sukses",
+                                      status.toString(),
+                                      icon: const Icon(
+                                        Icons.check_circle,
+                                        color: Colors.white,
+                                      ),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.blue.shade300,
+                                      borderRadius: 10,
+                                      margin: EdgeInsets.only(
+                                        bottom: Get.height * .1,
+                                        left: 10,
+                                        right: 10,
+                                      ),
+                                      colorText: Colors.white,
+                                      duration: const Duration(milliseconds: 1500),
+                                      isDismissible: true,
+                                      dismissDirection: DismissDirection.horizontal,
+                                      forwardAnimationCurve: Curves.easeOutBack,
+                                    );
+                                  },
                                   child: Text(
                                     'Simpan',
                                     style: GoogleFonts.nunitoSans(
