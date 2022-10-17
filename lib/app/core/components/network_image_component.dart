@@ -19,7 +19,7 @@ class NetworkImageComponent extends StatelessWidget {
       imageUrl: image,
       width: width,
       height: height,
-      boxFit: BoxFit.cover,
+      boxFit: BoxFit.contain,
       errorWidget: Image.network('https://i0.wp.com/www.dobitaobyte.com.br/wp-content/uploads/2016/02/no_image.png?ssl=1'),
     );
   }

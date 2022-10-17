@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:get/get.dart';
 import 'package:mobile_prog_test_2/app/core/components/network_image_component.dart';
+import 'package:mobile_prog_test_2/app/routes/app_pages.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -46,7 +47,14 @@ class HomeView extends GetView<HomeController> {
                   itemCount: listLength,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Get.toNamed(
+                          Routes.detail,
+                          arguments: {
+                            'data': list[index],
+                          },
+                        );
+                      },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: NetworkImageComponent(
