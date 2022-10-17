@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:mobile_prog_test_2/app/modules/home/bindings/home_binding.dart';
 
 import 'app/routes/app_pages.dart';
 
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: AppPages.initial,
       getPages: AppPages.routes,
+      initialBinding: HomeBinding(),
     );
   }
 }

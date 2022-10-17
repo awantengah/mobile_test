@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -17,7 +18,17 @@ class HomeView extends GetView<HomeController> {
         elevation: 0,
         backgroundColor: Colors.green.shade900,
       ),
-      body: SingleChildScrollView(
+      body: EasyRefresh(
+        controller: controller.easyRefreshController,
+        header: const MaterialHeader(),
+        onRefresh: () async {
+          await Future.delayed(const Duration(seconds: 2));
+          controller.clearListMeme();
+          controller.getListMeme();
+          controller.easyRefreshController.finishRefresh();
+          controller.easyRefreshController.resetFooter();
+        },
+        notLoadFooter: const NotLoadFooter(),
         child: Container(
           padding: const EdgeInsets.all(10),
           child: GetBuilder<HomeController>(
