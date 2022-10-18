@@ -125,16 +125,17 @@ class DetailView extends GetView<DetailController> {
                     ),
                     GetBuilder<DetailController>(
                       builder: (controller) {
-                        if (controller.isAddImage == true && controller.isAddText == true) {
+                        if (controller.isAddImage == true && controller.isAddText == true && controller.isBtnSharePress == false) {
                           return Row(
                             children: [
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () async {
+                                    await controller.checkPermission();
                                     var status = await controller.saveWatermarkedImageToLocal();
                                     Get.snackbar(
                                       "Sukses",
-                                      status.toString(),
+                                      status == true ? 'Gambar berhasil disimpan' : 'Gambar gagal di simpan',
                                       icon: const Icon(
                                         Icons.check_circle,
                                         color: Colors.white,
@@ -168,9 +169,88 @@ class DetailView extends GetView<DetailController> {
                               ),
                               Expanded(
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    controller.pressBtnShare();
+                                  },
                                   child: Text(
                                     'Share',
+                                    style: GoogleFonts.nunitoSans(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        } else if (controller.isBtnSharePress == true) {
+                          return Column(
+                            children: [
+                              SizedBox(
+                                width: Get.width,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    controller.shareToSocialMedia(ShareTo.facebook, context);
+                                    Get.snackbar(
+                                      "Failed",
+                                      '-',
+                                      icon: const Icon(
+                                        Icons.check_circle,
+                                        color: Colors.white,
+                                      ),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.blue.shade300,
+                                      borderRadius: 10,
+                                      margin: EdgeInsets.only(
+                                        bottom: Get.height * .1,
+                                        left: 10,
+                                        right: 10,
+                                      ),
+                                      colorText: Colors.white,
+                                      duration: const Duration(milliseconds: 1500),
+                                      isDismissible: true,
+                                      dismissDirection: DismissDirection.horizontal,
+                                      forwardAnimationCurve: Curves.easeOutBack,
+                                    );
+                                  },
+                                  child: Text(
+                                    'Share to FB',
+                                    style: GoogleFonts.nunitoSans(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: Get.width,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    controller.shareToSocialMedia(ShareTo.twitter, context);
+                                    Get.snackbar(
+                                      "Failed",
+                                      '-',
+                                      icon: const Icon(
+                                        Icons.check_circle,
+                                        color: Colors.white,
+                                      ),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.blue.shade300,
+                                      borderRadius: 10,
+                                      margin: EdgeInsets.only(
+                                        bottom: Get.height * .1,
+                                        left: 10,
+                                        right: 10,
+                                      ),
+                                      colorText: Colors.white,
+                                      duration: const Duration(milliseconds: 1500),
+                                      isDismissible: true,
+                                      dismissDirection: DismissDirection.horizontal,
+                                      forwardAnimationCurve: Curves.easeOutBack,
+                                    );
+                                  },
+                                  child: Text(
+                                    'Share to Twitter',
                                     style: GoogleFonts.nunitoSans(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,

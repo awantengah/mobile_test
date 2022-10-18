@@ -11,6 +11,11 @@ import 'package:mobile_prog_test_2/app/modules/detail/models/save_image_model.da
 import 'package:mobile_prog_test_2/app/modules/home/models/imgflip_model.dart' as imgflip_model;
 import 'package:permission_handler/permission_handler.dart';
 
+enum ShareTo {
+  facebook,
+  twitter,
+}
+
 class DetailController extends GetxController {
   late imgflip_model.Memes? dataMeme;
   late TextEditingController addTextController;
@@ -23,6 +28,7 @@ class DetailController extends GetxController {
 
   bool isAddImage = false;
   bool isAddText = false;
+  bool isBtnSharePress = false;
 
   @override
   void onInit() {
@@ -32,6 +38,11 @@ class DetailController extends GetxController {
       getMainImageBytes(dataMeme);
     }
     addTextController = TextEditingController();
+  }
+
+  pressBtnShare() {
+    isBtnSharePress = true;
+    update();
   }
 
   getMainImageBytes(data) async {
@@ -72,7 +83,7 @@ class DetailController extends GetxController {
     update();
   }
 
-  saveWatermarkedImageToLocal() async {
+  checkPermission() async {
     const permission = Permission.storage;
     final status = await permission.status;
     if (status != PermissionStatus.granted) {
@@ -81,18 +92,34 @@ class DetailController extends GetxController {
         await permission.request();
       }
     }
+  }
 
+  saveWatermarkedImageToLocal() async {
+    const permission = Permission.storage;
+    final status = await permission.status;
     if (status == PermissionStatus.granted) {
       final result = await ImageGallerySaver.saveImage(watermarkedImageBytes);
       var responseResult = jsonDecode(jsonEncode(result));
       var readResponseResult = SaveImageModel.fromJson(responseResult);
-      if (readResponseResult.isSuccess == true) {
-        return "Gambar berhasil disimpan";
-      } else {
-        return "Gambar gagal disimpan";
-      }
+      return readResponseResult.isSuccess;
     } else {
-      return status;
+      return false;
+    }
+  }
+
+  shareToSocialMedia(ShareTo share, context) async {
+    final result = await ImageGallerySaver.saveImage(watermarkedImageBytes);
+    var responseResult = jsonDecode(jsonEncode(result));
+    var readResponseResult = SaveImageModel.fromJson(responseResult);
+
+    List<String> files = [];
+    files.add(readResponseResult.filePath.toString());
+
+    switch (share) {
+      case ShareTo.facebook:
+        break;
+      case ShareTo.twitter:
+        break;
     }
   }
 }
